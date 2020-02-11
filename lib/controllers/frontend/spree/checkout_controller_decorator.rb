@@ -1,7 +1,6 @@
 require 'spree/core/validators/email' if Spree.version.to_f < 3.5
 module Spree::CheckoutControllerDecorator
   def self.prepended(base)
-    base.before_action :check_authorization
     base.before_action :check_registration, except: [:registration, :update_registration]
   end
 
@@ -27,10 +26,6 @@ module Spree::CheckoutControllerDecorator
 
   def skip_state_validation?
     %w(registration update_registration).include?(params[:action])
-  end
-
-  def check_authorization
-    authorize!(:edit, current_order, cookies.signed[:guest_token])
   end
 
   # Introduces a registration step whenever the +registration_step+ preference is true.
